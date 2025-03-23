@@ -419,10 +419,12 @@ export default function CreateStory() {
                       {Object.keys(activeGraph?.nodes || {}).length} nodes
                     </Badge>
                   </div>
-                  <div className="h-[calc(100vh-280px)] w-full">
-                    <StoryGraphVisualization 
-                      graph={activeGraph} 
-                    />
+                  <div className="h-[calc(100vh-280px)] w-full flex items-center justify-center bg-muted/30 rounded-md">
+                    <div className="text-center p-6">
+                      <GitGraph className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+                      <h3 className="text-xl font-medium mb-2">Work in Progress</h3>
+                      <p className="text-muted-foreground">Story graph visualization coming soon...</p>
+                    </div>
                   </div>
                 </Card>
               )}

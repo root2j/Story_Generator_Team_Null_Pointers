@@ -148,9 +148,8 @@ export default function Home() {
             </div>
             <div className="hidden md:flex items-center space-x-8">
               <Link href="#features" className="text-white/80 hover:text-white transition-colors">Features</Link>
-              <Link href="#pricing" className="text-white/80 hover:text-white transition-colors">Pricing</Link>
-              <Link href="#about" className="text-white/80 hover:text-white transition-colors">About</Link>
-              <Link href="#contact" className="text-white/80 hover:text-white transition-colors">Contact</Link>
+              <Link href="#workflow" className="text-white/80 hover:text-white transition-colors">How It Works</Link>
+              <Link href="#testimonials" className="text-white/80 hover:text-white transition-colors">Testimonials</Link>
             </div>
             <div className="flex items-center space-x-4">
               {isSignedIn ? (
@@ -183,37 +182,67 @@ export default function Home() {
             transition={{ duration: 0.8 }}
             className="inline-block"
           >
-            <span className="inline-flex items-center px-4 py-1.5 rounded-full glass-card text-white text-sm mb-8">
+            {/* <span className="inline-flex items-center px-4 py-1.5 rounded-full glass-card text-white text-sm mb-8">
               <Star className="h-4 w-4 mr-2 text-violet-400" /> New: AI Story Templates Available
-            </span>
+            </span> */}
           </motion.div>
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-5xl sm:text-7xl font-bold mb-6 gradient-text"
-          >
-            Where AI Brings Your
-            <br />
-            Stories to Life
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-xl sm:text-2xl text-white/80 mb-12 max-w-3xl mx-auto leading-relaxed"
-          >
-            Create dynamic, interactive stories that adapt to your choices in real-time using the power of artificial intelligence. Join thousands of storytellers today.
-          </motion.p>
+          <div className="mb-8">
+            <div className="relative mirror-text" data-text="The AI Story Generator">
+              <h1 className="text-6xl md:text-7xl font-bold tracking-tight neon-text bg-clip-text text-transparent bg-gradient-to-r from-[#a855f7] via-white to-[#3b82f6] mirror-reflection-8">
+                The AI Story Generator
+              </h1>
+              <h1 className="text-6xl md:text-7xl font-bold tracking-tight neon-text bg-clip-text text-transparent bg-gradient-to-r from-[#a855f7] via-white to-[#3b82f6] mirror-reflection-7">
+                The AI Story Generator
+              </h1>
+              <h1 className="text-6xl md:text-7xl font-bold tracking-tight neon-text bg-clip-text text-transparent bg-gradient-to-r from-[#a855f7] via-white to-[#3b82f6] mirror-reflection-6">
+                The AI Story Generator
+              </h1>
+              <h1 className="text-6xl md:text-7xl font-bold tracking-tight neon-text bg-clip-text text-transparent bg-gradient-to-r from-[#a855f7] via-white to-[#3b82f6] mirror-reflection-5">
+                The AI Story Generator
+              </h1>
+              <h1 className="text-6xl md:text-7xl font-bold tracking-tight neon-text bg-clip-text text-transparent bg-gradient-to-r from-[#a855f7] via-white to-[#3b82f6] mirror-reflection-4">
+                The AI Story Generator
+              </h1>
+              <h1 className="text-6xl md:text-7xl font-bold tracking-tight neon-text bg-clip-text text-transparent bg-gradient-to-r from-[#a855f7] via-white to-[#3b82f6] mirror-reflection-3">
+                The AI Story Generator
+              </h1>
+              <h1 className="text-6xl md:text-7xl font-bold tracking-tight neon-text bg-clip-text text-transparent bg-gradient-to-r from-[#a855f7] via-white to-[#3b82f6] mirror-reflection-2">
+                The AI Story Generator
+              </h1>
+              <h1 className="text-6xl md:text-7xl font-bold tracking-tight neon-text bg-clip-text text-transparent bg-gradient-to-r from-[#a855f7] via-white to-[#3b82f6] mirror-reflection">
+                The AI Story Generator
+              </h1>
+              <h1 className="text-6xl md:text-7xl font-bold tracking-tight mb-6 neon-text bg-clip-text text-transparent bg-gradient-to-r from-[#a855f7] via-white to-[#3b82f6] relative">
+                The AI Story Generator
+              </h1>
+            </div>
+            <p className="text-xl text-white/80 mb-8">
+              Transform your ideas into captivating stories and stunning videos with the power of AI. Create, collaborate, and bring your narratives to life.
+            </p>
+          </div>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
             className="flex flex-col sm:flex-row items-center justify-center gap-4"
           >
-            <Button size="lg" className="bg-violet-600 text-white hover:bg-violet-700 font-semibold px-8 h-12 text-lg group cursor-pointer">
-              Start Creating Free <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-            </Button>
+            {isSignedIn ? (
+              <Button 
+                size="lg" 
+                className="bg-violet-600 text-white hover:bg-violet-700 font-semibold px-8 h-12 text-lg group cursor-pointer"
+                onClick={() => router.push("/dashboard")}
+              >
+                Go to Dashboard <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            ) : (
+              <span className="bg-violet-600 hover:bg-violet-700 rounded-md font-semibold cursor-pointer">
+                <SignUpButton mode="modal">
+                  <Button size="lg" className="text-white font-semibold px-8 h-12 text-lg group">
+                    Start Creating Free <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+                </SignUpButton>
+              </span>
+            )}
             <Button size="lg" variant="outline" className="text-white bg-black border-white/80 hover:bg-white/90 font-semibold px-8 h-12 text-lg cursor-pointer">
               <Play className="mr-2 h-4 w-4" /> Watch Demo
             </Button>
@@ -243,7 +272,7 @@ export default function Home() {
       </div>
 
       {/* Features Section */}
-      <div ref={ref} className="py-24 px-4 sm:px-6 lg:px-8">
+      <div id="features" ref={ref} className="py-24 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <motion.h2
@@ -288,7 +317,7 @@ export default function Home() {
       </div>
 
       {/* Trust Section */}
-      <div className="py-16 px-4 sm:px-6 lg:px-8 glass-card">
+      {/* <div className="py-16 px-4 sm:px-6 lg:px-8 glass-card">
         <div className="max-w-7xl mx-auto text-center">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <motion.div
@@ -320,10 +349,10 @@ export default function Home() {
             </motion.div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Workflow Section */}
-      <div className="py-24 px-4 sm:px-6 lg:px-8">
+      <div id="workflow" className="py-24 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <motion.h2
@@ -361,6 +390,46 @@ export default function Home() {
                   </div>
                   <h3 className="text-xl font-semibold mb-3 text-white">{step.title}</h3>
                   <p className="text-white/80 leading-relaxed">{step.description}</p>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Testimonials Section */}
+      <div id="testimonials" className="py-24 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              transition={{ duration: 0.8 }}
+              className="text-3xl sm:text-4xl font-bold text-white mb-4"
+            >
+              What Our Users Say
+            </motion.h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {testimonials.map((testimonial, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                transition={{ duration: 0.8, delay: index * 0.2 }}
+              >
+                <Card className="testimonial-card p-8">
+                  <div className="mb-6">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="h-5 w-5 text-yellow-400 inline-block" />
+                    ))}
+                  </div>
+                  <p className="text-white/90 text-lg mb-6">"{testimonial.quote}"</p>
+                  <div>
+                    <p className="text-white font-semibold">{testimonial.author}</p>
+                    <p className="text-white/60">{testimonial.role}</p>
+                    <p className="text-white/60">{testimonial.company}</p>
+                  </div>
                 </Card>
               </motion.div>
             ))}
@@ -427,49 +496,9 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Testimonials Section */}
-      <div className="py-24 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ duration: 0.8 }}
-              className="text-3xl sm:text-4xl font-bold text-white mb-4"
-            >
-              What Our Users Say
-            </motion.h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-                transition={{ duration: 0.8, delay: index * 0.2 }}
-              >
-                <Card className="testimonial-card p-8">
-                  <div className="mb-6">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="h-5 w-5 text-yellow-400 inline-block" />
-                    ))}
-                  </div>
-                  <p className="text-white/90 text-lg mb-6">"{testimonial.quote}"</p>
-                  <div>
-                    <p className="text-white font-semibold">{testimonial.author}</p>
-                    <p className="text-white/60">{testimonial.role}</p>
-                    <p className="text-white/60">{testimonial.company}</p>
-                  </div>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </div>
-
       {/* CTA Section */}
-      <div className="py-24 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto text-center">
+      {/* <div className="py-24 px-4 sm:px-6 lg:px-8">
+        <div className="max-4xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -507,7 +536,7 @@ export default function Home() {
             </motion.div>
           </motion.div>
         </div>
-      </div>
+      </div> */}
 
       {/* Footer */}
       <footer className="glass-card py-16 px-4 sm:px-6 lg:px-8">

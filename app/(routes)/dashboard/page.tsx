@@ -134,21 +134,21 @@ const creationMethods = [
         link: "/createprompt"
     },
     {
-        title: "Create Story Manually",
+        title: "Create User Decision Based Story",
         description: "Write your own story from scratch",
         icon: PenLine,
         gradient: "from-blue-500 to-cyan-500",
-        link: "/storymanually"
+        link: "/create-story"
     },
     {
-        title: "Audiobooks",
+        title: "Create Audiobooks",
         description: "Convert your stories into audiobooks",
         icon: Mic,
         gradient: "from-green-500 to-emerald-500",
         link: "/audiobooks"
     },
     {
-        title: "Video Stories",
+        title: "Create Video Stories",
         description: "Transform stories into animated videos",
         icon: Video,
         gradient: "from-orange-500 to-yellow-500",
