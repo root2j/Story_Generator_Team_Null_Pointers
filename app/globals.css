@@ -232,3 +232,74 @@
   );
   background-size: 30px 30px;
 }
+
+.premium-card {
+  @apply relative overflow-hidden;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.05)
+  );
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.dark .premium-card {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.05)
+  );
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2),
+    0 2px 4px -1px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.premium-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: 0.5s;
+}
+
+.premium-card:hover::before {
+  left: 100%;
+}
+
+.premium-badge {
+  @apply absolute top-2 right-2 px-3 py-1 rounded-full text-xs font-semibold z-10;
+  background: linear-gradient(135deg, #ffd700, #ffa500);
+  color: #000;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.premium-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 12px -1px rgba(0, 0, 0, 0.2),
+    0 4px 6px -1px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.premium-card .group-hover\:opacity-100 {
+  will-change: opacity;
+}
+
+.premium-card .group-hover\:translate-y-0 {
+  will-change: transform;
+}
+
+.premium-card .group-hover\:scale-105 {
+  will-change: transform;
+}
