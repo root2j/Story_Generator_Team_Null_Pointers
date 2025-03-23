@@ -1,8 +1,7 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const genAI = new GoogleGenerativeAI(
-  process.env.NEXT_PUBLIC_GEMINI_API_KEY ||
-    "AIzaSyCqxBA7P8F0P58BhUf0KZGHPXHG1ReheqQ"
+  process.env.NEXT_PUBLIC_GEMINI_API_KEY
 );
 
 export async function generateStory(prompt: string) {
