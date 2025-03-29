@@ -1,6 +1,9 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* @import "@liveblocks/react-ui/styles.css";
+@import "@liveblocks/react-lexical/styles.css"; */
+
 @custom-variant dark (&:is(.dark *));
 
 :root {
@@ -302,4 +305,40 @@
 
 .premium-card .group-hover\:scale-105 {
   will-change: transform;
+}
+
+.bg-gradient-light {
+  background: linear-gradient(135deg, #ff9a9e, #fad0c4, #fbc2eb, #a18cd1);
+  background-size: 300% 300%;
+  animation: gradientAnimationLight 6s ease infinite;
+}
+
+.bg-gradient-dark {
+  background: linear-gradient(135deg, #141e30, #243b55, #1e3c72, #2a5298);
+  background-size: 300% 300%;
+  animation: gradientAnimationDark 6s ease infinite;
+}
+
+@keyframes gradientAnimationLight {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes gradientAnimationDark {
+  0% {
+    background-position: 50% 0%;
+  }
+  50% {
+    background-position: 50% 100%;
+  }
+  100% {
+    background-position: 50% 0%;
+  }
 }

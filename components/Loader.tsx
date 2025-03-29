@@ -32,7 +32,7 @@ export default function WebsiteLoader() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1.5, ease: "easeOut" }}
             >
-                Ascension Studio Loading...
+                Null Pointers Studio Loading...
             </motion.h1>
         </div>
     );

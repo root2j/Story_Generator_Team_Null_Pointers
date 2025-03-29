@@ -39,7 +39,7 @@ export default function OverviewLayout({ children }: OverviewLayoutProps) {
                         <Breadcrumb>
                             <BreadcrumbList>
                                 <BreadcrumbItem>
-                                    <BreadcrumbLink href="/">AI Story</BreadcrumbLink>
+                                    <BreadcrumbLink href="/">Null Pointers Studio</BreadcrumbLink>
                                 </BreadcrumbItem>
                                 <BreadcrumbSeparator />
                                 <BreadcrumbItem>
