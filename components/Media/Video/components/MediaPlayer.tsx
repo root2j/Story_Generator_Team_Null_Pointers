@@ -101,8 +101,8 @@ const MediaPlayer: React.FC<MediaPlayerProps> = ({ finalVideoAssets, setDuration
     ];
 
     // Manually set start and end video durations (adjust as needed)
-    const startVideoDuration = 22 * fps; // 22 seconds
-    const endVideoDuration = 10 * fps;  // 10 seconds
+    const startVideoDuration = 10 * fps; // 22 seconds
+    const endVideoDuration = 4 * fps;  // 10 seconds
 
     const baseSceneDurations = useMemo(() => {
         const firstSceneDuration = finalVideoAssets.captions.firstScene.endTime - finalVideoAssets.captions.firstScene.startTime;

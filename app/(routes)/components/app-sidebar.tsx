@@ -25,11 +25,12 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { NavMain } from "./nav-main"
-import { NavProjects } from "./nav-projects"
+import { NavProjects } from "./nav-storypromptprojects"
 import { NavSecondary } from "./nav-secondary"
 import { NavUser } from "./nav-user"
 import { useUser } from "@clerk/nextjs"
 import { useEffect, useState } from "react"
+import { NavVideoProjects } from "./nav-projects"
 
 const data = {
   user: {
@@ -179,6 +180,37 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+  const { isSignedIn, isLoaded } = useUser();
+  const [videoAssetsData, setVideoAssetsData] = React.useState<{ id: string; prompt: string }[]>([]);
+
+  async function fetchVideoAssets(): Promise<{ id: string; prompt: string }[]> {
+    try {
+      const response = await fetch("/api/all-video-assets");
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to fetch video assets.");
+      }
+
+      const data = await response.json();
+
+      // Extract 'id' and 'prompt' fields from each object in the videoAssets array
+      return data.videoAssets?.map((asset: { id: string; prompt: string }) => ({
+        id: asset.id,
+        prompt: asset.prompt, // Assuming 'content' contains the prompt
+      })) || [];
+    } catch (error) {
+      console.error("Error fetching video assets:", error);
+      return [];
+    }
+  }
+
+  React.useEffect(() => {
+    fetchVideoAssets().then((assets) => {
+      if (assets) setVideoAssetsData(assets);
+    });
+  }, []);
+
   useEffect(() => {
     const fetchStories = async () => {
       try {
@@ -220,6 +252,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <NavMain items={data.navMain} />
         <NavProjects projects={storyData} />
+        <NavVideoProjects projects={videoAssetsData.map(({ id, prompt }) => ({ sceneId: id, prompt }))} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>

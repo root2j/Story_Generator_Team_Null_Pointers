@@ -5,12 +5,29 @@ import { NextRequest } from "next/server";
 
 const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY!);
 
+// Helper function to safely parse JSON
+const sanitizeAndParseJSON = (jsonString: string) => {
+  try {
+    // Remove all markdown code blocks and control characters
+    const sanitized = jsonString
+      .replace(/```json/g, "")
+      .replace(/```/g, "")
+      .replace(/[\x00-\x1F]/g, "") // Remove control characters
+      .trim();
+
+    return JSON.parse(sanitized);
+  } catch (error) {
+    console.error("JSON sanitization failed:", error);
+    throw new Error("Failed to parse and sanitize JSON response");
+  }
+};
+
 export async function POST(request: NextRequest) {
   try {
     const { scriptConcept, charactersResponse, selectLanguage } =
       await request.json();
 
-    // Validate input
+    // Validate input (existing validation remains the same)
     if (!scriptConcept || !selectLanguage || !charactersResponse) {
       return new Response(
         JSON.stringify({
@@ -23,6 +40,7 @@ export async function POST(request: NextRequest) {
 
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro-latest" });
 
+    // Existing prompt configuration remains the same
     const analysisPrompt = `
 ### **Role:**
 You are a **Senior Cinematic Script Analyst**, specializing in film narrative analysis and scene composition. Your task is to extract **6 highly detailed cinematic scenes** from the provided script (${scriptConcept}), ensuring **absolute character and background consistency** using ${charactersResponse}, while dynamically varying attire and specific character details per scene.
@@ -67,6 +85,7 @@ The response must be in **pure JSON format**, embedding all character details di
     "visualStyle": "Cinematic style, lighting, framing, and atmosphere...",
     "narrativeStructure": "How scenes interconnect to build the story..."
   },
+  "prompt":"Title of the story",
   "firstScene": {
     "sceneTitle": "First Scene Title...",
     "description": "[MANDATORY] A highly detailed cinematic description, embedding full character attire, facial features, textures, body language, emotions, lighting, and camera angles. Character attire must be **unique to this scene** and should not be repeated in later scenes. The background remains unchanged for consistency.",
@@ -177,21 +196,31 @@ ${scriptConcept}
     const response = await result.response;
     const analysis = response.text();
 
-    // Clean Gemini response
-    const cleanedResponse = analysis
-      .replace(/```json/g, "")
-      .replace(/```/g, "");
-    const parsedAnalysis = JSON.parse(cleanedResponse);
+    // Improved error handling and logging
+    console.log("Raw Gemini Response:", analysis); // For debugging purposes
 
-    return new Response(JSON.stringify(parsedAnalysis), {
-      headers: { "Content-Type": "application/json" },
-    });
+    try {
+      const parsedAnalysis = sanitizeAndParseJSON(analysis);
+      return new Response(JSON.stringify(parsedAnalysis), {
+        headers: { "Content-Type": "application/json" },
+      });
+    } catch (parseError) {
+      console.error("JSON Parsing Error:", parseError);
+      return new Response(
+        JSON.stringify({
+          error: "Failed to parse AI response",
+          details: "Invalid JSON format received from AI model",
+          rawResponse: analysis, // Include for debugging
+        }),
+        { status: 500, headers: { "Content-Type": "application/json" } }
+      );
+    }
   } catch (error) {
     console.error("Server Error:", error);
     return new Response(
       JSON.stringify({
         error: "Failed to analyze script",
-        details: error,
+        details: error instanceof Error ? error.message : "Unknown error",
       }),
       { status: 500, headers: { "Content-Type": "application/json" } }
     );
