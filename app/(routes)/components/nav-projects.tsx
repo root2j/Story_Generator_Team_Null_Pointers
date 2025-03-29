@@ -56,7 +56,7 @@ export function NavProjects({
             <SidebarMenuButton asChild>
               <a href={`/createprompt/${item.id}`}>
                 <Projector className="text-muted-foreground" />
-                <span>{item.id}</span>
+                <span>{item.storyTitle}</span>
               </a>
             </SidebarMenuButton>
             <DropdownMenu>
