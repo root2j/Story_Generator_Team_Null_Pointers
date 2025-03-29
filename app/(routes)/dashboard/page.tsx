@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -29,8 +29,9 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
+import { useUser } from "@clerk/nextjs";
 
-const storyCategories = ["All Stories", "Fantasy", "Mystery", "Romance", "Sci-Fi", "Adventure", "Horror"];
+const storyCategories = ["All Stories", "Fantasy", "Mystery", "Fiction", "SciFi", "Adventure", "Horror", "Romance"];
 
 const stories = [
     {
@@ -134,21 +135,21 @@ const creationMethods = [
         link: "/createprompt"
     },
     {
-        title: "Create User Decision Based Story",
+        title: "Create Story Manually",
         description: "Write your own story from scratch",
         icon: PenLine,
         gradient: "from-blue-500 to-cyan-500",
-        link: "/create-story"
+        link: "/storymanually"
     },
     {
-        title: "Create Audiobooks",
+        title: "Audiobooks",
         description: "Convert your stories into audiobooks",
         icon: Mic,
         gradient: "from-green-500 to-emerald-500",
         link: "/audiobooks"
     },
     {
-        title: "Create Video Stories",
+        title: "Video Stories",
         description: "Transform stories into animated videos",
         icon: Video,
         gradient: "from-orange-500 to-yellow-500",
@@ -178,14 +179,35 @@ const itemVariants = {
     },
 };
 
+interface Story {
+    id: string;
+    storypromptId: string;
+    storyTitle: string;
+    storyPrompt: string;
+    storyType: string;
+    ageGroup: string;
+    writingStyle: string;
+    complexity: number[];
+    bookCoverImage: string;
+    chapterTexts: string[];
+    chapterImages: string[];
+    createdAt: string;
+}
+
 export default function OverviewComponent() {
     const [selectedCategory, setSelectedCategory] = useState("All Stories");
     const [likedStories, setLikedStories] = useState<number[]>([]);
     const [savedStories, setSavedStories] = useState<number[]>([]);
 
+    const [storyData, setStoryData] = useState<Story[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
+
+    const user = useUser();
+
     const filteredStories = selectedCategory === "All Stories"
-        ? stories
-        : stories.filter(story => story.category === selectedCategory);
+        ? storyData
+        : storyData.filter(story => story.storyType.toLowerCase() === selectedCategory.toLowerCase());
 
     const toggleLike = (id: number) => {
         setLikedStories(prev =>
@@ -198,6 +220,25 @@ export default function OverviewComponent() {
             prev.includes(id) ? prev.filter(storyId => storyId !== id) : [...prev, id]
         );
     };
+
+    useEffect(() => {
+        const fetchStories = async () => {
+            try {
+                const response = await fetch("/api/save-promptstory");
+                if (!response.ok) {
+                    throw new Error("Failed to fetch stories");
+                }
+                const data = await response.json();
+                setStoryData(data.stories);
+            } catch (err) {
+                setError(err instanceof Error ? err.message : "An error occurred");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchStories();
+    }, []);
 
     return (
         <div className="min-h-screen p-6 space-y-8">
@@ -273,14 +314,14 @@ export default function OverviewComponent() {
                                     >
                                         <div className="relative aspect-[3/4]">
                                             <img
-                                                src={story.coverImage}
-                                                alt={story.title}
+                                                src={story.bookCoverImage}
+                                                alt={story.storyType}
                                                 className="object-cover w-full h-full rounded-t-xl transition-transform duration-300 group-hover:scale-105"
                                             />
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                                            {story.isPremium && (
+                                            {story.storyType && (
                                                 <div className="premium-badge">
-                                                    Premium
+                                                    {story.storyType}
                                                 </div>
                                             )}
                                             <motion.div
@@ -288,8 +329,10 @@ export default function OverviewComponent() {
                                                 initial={{ opacity: 0 }}
                                                 animate={{ opacity: 1 }}
                                             >
-                                                <h3 className="font-semibold text-lg mb-1 line-clamp-1">{story.title}</h3>
-                                                <p className="text-sm line-clamp-2 text-gray-200">{story.description}</p>
+                                                <h3 className="font-semibold text-lg mb-1 line-clamp-1">{story.storyTitle}</h3>
+                                                <p className="text-sm text-gray-200">
+                                                    {story.storyPrompt.split(" ").slice(0, 10).join(" ")}...
+                                                </p>
                                             </motion.div>
                                         </div>
 
@@ -297,16 +340,16 @@ export default function OverviewComponent() {
                                             <div className="flex items-center space-x-2">
                                                 <div className="flex items-center space-x-2 text-sm">
                                                     <User className="w-4 h-4" />
-                                                    <span className="font-medium">{story.author}</span>
+                                                    <span className="font-medium">{user.user?.fullName}</span>
                                                 </div>
                                                 <span className="text-muted-foreground">•</span>
                                                 <div className="flex items-center text-sm text-muted-foreground">
                                                     <Clock className="w-3 h-3 mr-1" />
-                                                    {story.readTime}
+                                                    {story.createdAt}
                                                 </div>
                                             </div>
 
-                                            <div className="flex items-center justify-between text-sm">
+                                            {/* <div className="flex items-center justify-between text-sm">
                                                 <div className="flex items-center space-x-4">
                                                     <div className="flex items-center">
                                                         <Star className="w-4 h-4 text-yellow-500 mr-1" />
@@ -321,31 +364,31 @@ export default function OverviewComponent() {
                                                         {story.comments}
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div> */}
 
-                                            <div className="flex flex-wrap gap-2">
+                                            {/* <div className="flex flex-wrap gap-2">
                                                 {story.tags.map((tag, index) => (
                                                     <Badge key={index} variant="secondary" className="text-xs">
                                                         {tag}
                                                     </Badge>
                                                 ))}
-                                            </div>
+                                            </div> */}
 
                                             <div className="flex items-center justify-between pt-2 border-t border-border">
                                                 <div className="flex space-x-2">
                                                     <Button
                                                         variant="ghost"
                                                         size="icon"
-                                                        className={`hover:text-rose-500 ${likedStories.includes(story.id) ? 'text-rose-500' : ''}`}
-                                                        onClick={() => toggleLike(story.id)}
+                                                        className={`hover:text-rose-500 ${likedStories.includes(Number(story.id)) ? 'text-rose-500' : ''}`}
+                                                        onClick={() => toggleLike(Number(story.id))}
                                                     >
                                                         <Heart className="w-4 h-4" />
                                                     </Button>
                                                     <Button
                                                         variant="ghost"
                                                         size="icon"
-                                                        className={`hover:text-blue-500 ${savedStories.includes(story.id) ? 'text-blue-500' : ''}`}
-                                                        onClick={() => toggleSave(story.id)}
+                                                        className={`hover:text-blue-500 ${savedStories.includes(Number(story.id)) ? 'text-blue-500' : ''}`}
+                                                        onClick={() => toggleSave(Number(story.id))}
                                                     >
                                                         <Bookmark className="w-4 h-4" />
                                                     </Button>

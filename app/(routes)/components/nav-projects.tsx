@@ -3,6 +3,7 @@
 import {
   Folder,
   MoreHorizontal,
+  Projector,
   Share,
   Trash2,
   type LucideIcon,
@@ -25,14 +26,24 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 
+interface Story {
+  id: string;
+  storypromptId: string;
+  storyTitle: string;
+  storyPrompt: string;
+  storyType: string;
+  ageGroup: string;
+  writingStyle: string;
+  complexity: number[];
+  bookCoverImage: string;
+  chapterTexts: string[];
+  chapterImages: string[];
+}
+
 export function NavProjects({
   projects,
 }: {
-  projects: {
-    name: string
-    url: string
-    icon: LucideIcon
-  }[]
+  projects: Story[]
 }) {
   const { isMobile } = useSidebar()
 
@@ -41,11 +52,11 @@ export function NavProjects({
       <SidebarGroupLabel>Projects</SidebarGroupLabel>
       <SidebarMenu>
         {projects.map((item) => (
-          <SidebarMenuItem key={item.name}>
+          <SidebarMenuItem key={item.storypromptId + item.id}>
             <SidebarMenuButton asChild>
-              <a href={item.url}>
-                <item.icon />
-                <span>{item.name}</span>
+              <a href={`/createprompt/${item.id}`}>
+                <Projector className="text-muted-foreground" />
+                <span>{item.id}</span>
               </a>
             </SidebarMenuButton>
             <DropdownMenu>

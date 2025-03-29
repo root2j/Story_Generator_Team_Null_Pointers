@@ -28,6 +28,8 @@ import { NavMain } from "./nav-main"
 import { NavProjects } from "./nav-projects"
 import { NavSecondary } from "./nav-secondary"
 import { NavUser } from "./nav-user"
+import { useUser } from "@clerk/nextjs"
+import { useEffect, useState } from "react"
 
 const data = {
   user: {
@@ -37,75 +39,79 @@ const data = {
   },
   navMain: [
     {
-      title: "Playground",
-      url: "#",
+      title: "Dashboard",
+      url: "/dashboard",
       icon: SquareTerminal,
       isActive: true,
       items: [
         {
-          title: "History",
-          url: "#",
+          title: "Create Story by Prompt",
+          url: "/createprompt",
         },
         {
-          title: "Starred",
-          url: "#",
+          title: "Create User Decision Based Story",
+          url: "/create-story",
         },
         {
-          title: "Settings",
-          url: "#",
+          title: "Create Audiobooks",
+          url: "/audiobooks",
         },
+        {
+          title: "Create Video Stories",
+          url: "/videostories",
+        }
       ],
     },
-    {
-      title: "Models",
-      url: "#",
-      icon: Bot,
-      items: [
-        {
-          title: "Genesis",
-          url: "#",
-        },
-        {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Documentation",
-      url: "#",
-      icon: BookOpen,
-      items: [
-        {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
-      ],
-    },
+    // {
+    //   title: "Models",
+    //   url: "#",
+    //   icon: Bot,
+    //   items: [
+    //     {
+    //       title: "Genesis",
+    //       url: "#",
+    //     },
+    //     {
+    //       title: "Explorer",
+    //       url: "#",
+    //     },
+    //     {
+    //       title: "Quantum",
+    //       url: "#",
+    //     },
+    //   ],
+    // },
+    // {
+    //   title: "Documentation",
+    //   url: "#",
+    //   icon: BookOpen,
+    //   items: [
+    //     {
+    //       title: "Introduction",
+    //       url: "#",
+    //     },
+    //     {
+    //       title: "Get Started",
+    //       url: "#",
+    //     },
+    //     {
+    //       title: "Tutorials",
+    //       url: "#",
+    //     },
+    //     {
+    //       title: "Changelog",
+    //       url: "#",
+    //     },
+    //   ],
+    // },
     {
       title: "Settings",
-      url: "#",
+      url: "/settings",
       icon: Settings2,
       items: [
         {
           title: "General",
-          url: "#",
+          url: "/settings",
         },
         {
           title: "Team",
@@ -113,7 +119,7 @@ const data = {
         },
         {
           title: "Billing",
-          url: "#",
+          url: "/billing",
         },
         {
           title: "Limits",
@@ -130,7 +136,7 @@ const data = {
     },
     {
       title: "Feedback",
-      url: "#",
+      url: "/feedback",
       icon: Send,
     },
   ],
@@ -153,7 +159,45 @@ const data = {
   ],
 }
 
+interface Story {
+  id: string;
+  storypromptId: string;
+  storyTitle: string;
+  storyPrompt: string;
+  storyType: string;
+  ageGroup: string;
+  writingStyle: string;
+  complexity: number[];
+  bookCoverImage: string;
+  chapterTexts: string[];
+  chapterImages: string[];
+}
+
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const user = useUser();
+  const [storyData, setStoryData] = useState<Story[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchStories = async () => {
+      try {
+        const response = await fetch("/api/save-promptstory");
+        if (!response.ok) {
+          throw new Error("Failed to fetch stories");
+        }
+        const data = await response.json();
+        setStoryData(data.stories);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "An error occurred");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStories();
+  }, []);
+
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
@@ -175,11 +219,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        {/* <NavProjects projects={data.projects} /> */}
+        <NavProjects projects={storyData} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={{
+          name: user.user?.fullName || "",
+          email: user.user?.emailAddresses[0].emailAddress || "",
+          avatar: user.user?.imageUrl || "",
+        }} />
       </SidebarFooter>
     </Sidebar>
   )

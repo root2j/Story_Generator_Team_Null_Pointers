@@ -43,7 +43,7 @@ export default function CreateStory() {
   // Generate AI story templates
   const generateRandomStory = async () => {
     setLoadingTemplates(true);
-    
+
     try {
       const templatePrompt = `
         Generate a creative story starter with a title and an intriguing opening paragraph.
@@ -53,11 +53,11 @@ export default function CreateStory() {
         
         Make it imaginative and engaging. Choose from genres like fantasy, sci-fi, mystery, or adventure.
       `;
-      
+
       const response = await generateStory(templatePrompt);
       const titleMatch = response.match(/TITLE:\s*(.*)/i);
       const openingMatch = response.match(/OPENING:\s*([\s\S]*)/i);
-      
+
       if (titleMatch && titleMatch[1] && openingMatch && openingMatch[1]) {
         setTitle(titleMatch[1].trim());
         setPrompt(openingMatch[1].trim());
@@ -79,16 +79,16 @@ export default function CreateStory() {
   // Start the story generation process
   const handleGenerate = async () => {
     if (!title || !prompt) return;
-    
+
     setGenerating(true);
-    
+
     try {
       // Create a new story graph with the provided title and prompt
       createNewGraph(title, prompt);
-      
+
       // Add protagonist character
       addCharacter("Protagonist");
-      
+
       // Generate AI choices using Gemini
       const context: StoryContext = {
         characters,
@@ -96,9 +96,9 @@ export default function CreateStory() {
         significantEvents: [],
         currentScene: prompt
       };
-      
+
       const choices = await generateStoryOptions(context);
-      
+
       // Generate content for each choice
       for (const choice of choices) {
         const choiceContent = await generateStory(`
@@ -109,10 +109,10 @@ export default function CreateStory() {
           
           Write a short paragraph describing what happens next (about 2-3 sentences).
         `);
-        
+
         addChoiceToCurrentNode(choice, choiceContent);
       }
-      
+
       setStoryStarted(true);
     } catch (error) {
       console.error("Error generating story:", error);
@@ -124,15 +124,15 @@ export default function CreateStory() {
   // Handle when the user selects a predefined choice
   const handleChoiceSelection = async (choiceId: string) => {
     setGenerating(true);
-    
+
     try {
       // Navigate to the new story node based on the choice
       navigateByChoice(choiceId);
-      
+
       // Get the current node after navigation
       const node = getCurrentNode();
       if (!node) return;
-      
+
       // Generate new AI choices
       const context: StoryContext = {
         characters,
@@ -140,9 +140,9 @@ export default function CreateStory() {
         significantEvents: [],
         currentScene: node.content
       };
-      
+
       const choices = await generateStoryOptions(context);
-      
+
       // Generate content for each choice
       for (const choice of choices) {
         const choiceContent = await generateStory(`
@@ -153,7 +153,7 @@ export default function CreateStory() {
           
           Write a short paragraph describing what happens next (about 2-3 sentences).
         `);
-        
+
         addChoiceToCurrentNode(choice, choiceContent);
       }
     } catch (error) {
@@ -166,13 +166,13 @@ export default function CreateStory() {
   // Handle when the user enters a custom choice
   const handleCustomChoice = async () => {
     if (!customChoice) return;
-    
+
     setGenerating(true);
-    
+
     try {
       const node = getCurrentNode();
       if (!node) return;
-      
+
       // Generate a response to the custom choice using AI
       const response = await generateStory(`
         Given this current situation:
@@ -182,24 +182,24 @@ export default function CreateStory() {
         
         Write a short paragraph describing what happens next (about 2-3 sentences).
       `);
-      
+
       // Add the choice to the current node and navigate to the new node
       addChoiceToCurrentNode(customChoice, response);
       navigateByChoice(node.choices[node.choices.length - 1].id);
-      
+
       // Generate new AI choices for the new node
       const newNode = getCurrentNode();
       if (!newNode) return;
-      
+
       const context: StoryContext = {
         characters,
         pastDecisions: [...pastDecisions, customChoice],
         significantEvents: [],
         currentScene: newNode.content
       };
-      
+
       const choices = await generateStoryOptions(context);
-      
+
       // Generate content for each choice
       for (const choice of choices) {
         const choiceContent = await generateStory(`
@@ -210,10 +210,10 @@ export default function CreateStory() {
           
           Write a short paragraph describing what happens next (about 2-3 sentences).
         `);
-        
+
         addChoiceToCurrentNode(choice, choiceContent);
       }
-      
+
       setCustomChoice('');
     } catch (error) {
       console.error("Error processing custom choice:", error);
@@ -241,16 +241,16 @@ export default function CreateStory() {
             <div className="flex items-center space-x-2">
               {storyStarted && (
                 <>
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     size="sm"
                     onClick={() => setShowGraph(!showGraph)}
                   >
                     <GitGraph className="h-4 w-4 mr-2" />
                     {showGraph ? "Hide Graph" : "Show Graph"}
                   </Button>
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     size="icon"
                     onClick={() => createSavePoint()}
                   >
@@ -272,21 +272,21 @@ export default function CreateStory() {
           {!storyStarted ? (
             <Card className="p-6 max-w-2xl mx-auto">
               <h2 className="text-2xl font-bold mb-6">Create a New Story</h2>
-              
+
               <div className="space-y-4 mb-6">
                 <div>
                   <label className="text-sm font-medium mb-2 block">Story Title</label>
-                  <Input 
+                  <Input
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     placeholder="Enter a title for your story"
                     className="w-full"
                   />
                 </div>
-                
+
                 <div>
                   <label className="text-sm font-medium mb-2 block">Story Prompt</label>
-                  <Textarea 
+                  <Textarea
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
                     placeholder="Describe the starting scenario for your story..."
@@ -294,7 +294,7 @@ export default function CreateStory() {
                   />
                 </div>
               </div>
-              
+
               <div className="flex justify-between items-center">
                 <Button
                   variant="outline"
@@ -314,8 +314,8 @@ export default function CreateStory() {
                     </>
                   )}
                 </Button>
-                
-                <Button 
+
+                <Button
                   onClick={handleGenerate}
                   disabled={!title || !prompt || generating || loadingTemplates}
                   className="gap-2"
@@ -353,23 +353,23 @@ export default function CreateStory() {
                           <div className="bg-muted/50 p-3 rounded-md text-sm text-muted-foreground">
                             <div className="font-medium mb-2">Your journey so far:</div>
                             <ul className="list-disc pl-5 space-y-1">
-                              {pastDecisions.map((decision, index) => (
+                              {pastDecisions.map((decision: any, index: number) => (
                                 <li key={index}>{decision}</li>
                               ))}
                             </ul>
                           </div>
                         )}
-                        
+
                         <div className="prose dark:prose-invert">
                           <p>{currentNode?.content || prompt}</p>
                         </div>
-                        
+
                         <div className="border-t pt-6">
                           <h3 className="text-lg font-medium mb-4">What will you do next?</h3>
-                          
+
                           {currentNode?.choices && currentNode.choices.length > 0 && (
                             <div className="space-y-2 mb-6">
-                              {currentNode.choices.map((choice) => (
+                              {currentNode.choices.map((choice: any) => (
                                 <Button
                                   key={choice.id}
                                   variant="outline"
@@ -383,7 +383,7 @@ export default function CreateStory() {
                               ))}
                             </div>
                           )}
-                          
+
                           <div className="pt-4 border-t">
                             <label className="text-sm font-medium mb-2 block">Write your own action:</label>
                             <div className="flex gap-2">
@@ -394,8 +394,8 @@ export default function CreateStory() {
                                 disabled={generating}
                                 className="flex-1"
                               />
-                              <Button 
-                                onClick={handleCustomChoice} 
+                              <Button
+                                onClick={handleCustomChoice}
                                 disabled={generating || !customChoice}
                                 variant="default"
                               >

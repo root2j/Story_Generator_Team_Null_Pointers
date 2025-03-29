@@ -304,6 +304,42 @@
   will-change: transform;
 }
 
+.bg-gradient-light {
+  background: linear-gradient(135deg, #ff9a9e, #fad0c4, #fbc2eb, #a18cd1);
+  background-size: 300% 300%;
+  animation: gradientAnimationLight 6s ease infinite;
+}
+
+.bg-gradient-dark {
+  background: linear-gradient(135deg, #141e30, #243b55, #1e3c72, #2a5298);
+  background-size: 300% 300%;
+  animation: gradientAnimationDark 6s ease infinite;
+}
+
+@keyframes gradientAnimationLight {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes gradientAnimationDark {
+  0% {
+    background-position: 50% 0%;
+  }
+  50% {
+    background-position: 50% 100%;
+  }
+  100% {
+    background-position: 50% 0%;
+  }
+}
+
 .mirror-text {
   position: relative;
   transform-style: preserve-3d;
@@ -326,8 +362,7 @@
 
 .neon-text {
   text-shadow: 0 0 10px rgba(168, 85, 247, 0.8),
-               0 0 20px rgba(168, 85, 247, 0.6),
-               0 0 30px rgba(168, 85, 247, 0.4);
+    0 0 20px rgba(168, 85, 247, 0.6), 0 0 30px rgba(168, 85, 247, 0.4);
 }
 
 .mirror-reflection {
