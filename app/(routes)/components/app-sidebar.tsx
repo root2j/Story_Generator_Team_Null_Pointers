@@ -182,7 +182,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   useEffect(() => {
     const fetchStories = async () => {
       try {
-        const response = await fetch("/api/get-promptstory-by-userId");
+        const response = await fetch("/api/save-promptstory");
         if (!response.ok) {
           throw new Error("Failed to fetch stories");
         }

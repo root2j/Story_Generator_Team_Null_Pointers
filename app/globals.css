@@ -342,3 +342,116 @@
     background-position: 50% 0%;
   }
 }
+
+.mirror-text {
+  position: relative;
+  transform-style: preserve-3d;
+  perspective: 3000px;
+}
+
+.mirror-text::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  bottom: -100%;
+  width: 100%;
+  background: linear-gradient(180deg, var(--primary) 0%, transparent 80%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  transform: rotateX(180deg);
+  opacity: 0.3;
+  filter: blur(2px);
+}
+
+.neon-text {
+  text-shadow: 0 0 10px rgba(168, 85, 247, 0.8),
+    0 0 20px rgba(168, 85, 247, 0.6), 0 0 30px rgba(168, 85, 247, 0.4);
+}
+
+.mirror-reflection {
+  position: absolute;
+  left: 0;
+  top: 0.2rem;
+  width: 100%;
+  transform: translateZ(-100px) scale(0.98);
+  opacity: 0.05;
+  filter: blur(3px);
+  transition: transform 0.15s ease-out;
+}
+
+.mirror-reflection-2 {
+  position: absolute;
+  left: 0;
+  top: 0.4rem;
+  width: 100%;
+  transform: translateZ(-200px) scale(0.96);
+  opacity: 0.08;
+  filter: blur(2.5px);
+  transition: transform 0.15s ease-out;
+}
+
+.mirror-reflection-3 {
+  position: absolute;
+  left: 0;
+  top: 0.6rem;
+  width: 100%;
+  transform: translateZ(-300px) scale(0.94);
+  opacity: 0.12;
+  filter: blur(2px);
+  transition: transform 0.15s ease-out;
+}
+
+.mirror-reflection-4 {
+  position: absolute;
+  left: 0;
+  top: 0.8rem;
+  width: 100%;
+  transform: translateZ(-400px) scale(0.92);
+  opacity: 0.16;
+  filter: blur(1.5px);
+  transition: transform 0.15s ease-out;
+}
+
+.mirror-reflection-5 {
+  position: absolute;
+  left: 0;
+  top: 1rem;
+  width: 100%;
+  transform: translateZ(-500px) scale(0.9);
+  opacity: 0.2;
+  filter: blur(1px);
+  transition: transform 0.15s ease-out;
+}
+
+.mirror-reflection-6 {
+  position: absolute;
+  left: 0;
+  top: 1.2rem;
+  width: 100%;
+  transform: translateZ(-600px) scale(0.88);
+  opacity: 0.24;
+  filter: blur(0.8px);
+  transition: transform 0.15s ease-out;
+}
+
+.mirror-reflection-7 {
+  position: absolute;
+  left: 0;
+  top: 1.4rem;
+  width: 100%;
+  transform: translateZ(-700px) scale(0.86);
+  opacity: 0.28;
+  filter: blur(0.6px);
+  transition: transform 0.15s ease-out;
+}
+
+.mirror-reflection-8 {
+  position: absolute;
+  left: 0;
+  top: 1.6rem;
+  width: 100%;
+  transform: translateZ(-800px) scale(0.84);
+  opacity: 0.32;
+  filter: blur(0.4px);
+  transition: transform 0.15s ease-out;
+}
